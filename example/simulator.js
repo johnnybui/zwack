@@ -294,7 +294,8 @@ function listParams() {
   );
   console.log(`    Cadence: ${Math.floor(runningCadence)} steps/min`);
 
-  console.log(`\nRandomness: ${randomness}`);
+  console.log(`\nPower/Speed Randomness: ${randomness}`);
+  console.log(`\nCadence Randomness: ${randomness}`);
   console.log(`Increment: ${incr}`);
   console.log("\n");
 }
