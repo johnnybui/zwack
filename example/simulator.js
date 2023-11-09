@@ -167,8 +167,8 @@ let notifyPowerCSP = function () {
 
 // Simulate FTMS Smart Trainer - Broadcasting Power and Cadence
 let notifyPowerFTMS = function () {
-  watts = Math.floor(Math.random() * randomness + power);
-  rpm = Math.floor(Math.random() * cadRandomness + cadence);
+  watts = power > 0 ? Math.floor(Math.random() * randomness + power) : 0;
+  rpm = cadence > 0 ? Math.floor(Math.random() * cadRandomness + cadence) : 0;
 
   try {
     zwackBLE.notifyFTMS({ watts: watts, cadence: rpm });
