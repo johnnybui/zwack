@@ -63,6 +63,7 @@
     "minor": "npm version minor",
     "patch": "npm version patch",
     "simulator": "node ./example/simulator.js",
+    "trainer": "yarn simulator --variable=ftms",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "version": "0.1.6"
