@@ -34,7 +34,7 @@ let runningCadence = 180;
 let runningSpeed = 10; // 6:00 minute mile
 let randomness = 50;
 let cadRandomness = 5;
-let sensorName = "Favero Assioma UNO";
+let sensorName = "Zwift Hub";
 
 let incr = 10;
 let runningIncr = 0.5;
@@ -52,8 +52,8 @@ process.stdin.setRawMode(true);
 
 const zwackBLE = new ZwackBLE({
   name: sensorName,
-  modelNumber: "ZW-101",
-  serialNumber: "1",
+  modelNumber: "ZW-38BC",
+  serialNumber: "06-C8673287492DE",
 });
 
 process.stdin.on("keypress", (str, key) => {
@@ -123,6 +123,18 @@ process.stdin.on("keypress", (str, key) => {
         if (incr < 1) {
           incr = 1;
         }
+        break;
+      case "0":
+        power = 0;
+        cadence = 0;
+        break;
+      case "1":
+        power = 130;
+        cadence = 80;
+        break;
+      case "2":
+        power = 250;
+        cadence = 80;
         break;
       default:
         listKeys();
