@@ -35,10 +35,10 @@ let runningSpeed = 10; // 6:00 minute mile
 let hr = 130;
 let randomness = 50;
 let cadRandomness = 10;
-let hrRandomness = 10
+let hrRandomness = 5
 let sensorName = "Zwift Hub";
 
-let incr = 10;
+let incr = 5;
 let runningIncr = 0.5;
 let stroke_count = 0;
 let wheel_count = 0;
