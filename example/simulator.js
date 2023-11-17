@@ -32,6 +32,7 @@ let powerMeterSpeed = 18; // kmh
 let powerMeterSpeedUnit = 2048; // Last Event time expressed in Unit of 1/2048 second
 let runningCadence = 180;
 let runningSpeed = 10; // 6:00 minute mile
+let hr = 130;
 let randomness = 50;
 let cadRandomness = 5;
 let sensorName = "Zwift Hub";
@@ -87,6 +88,15 @@ process.stdin.on("keypress", (str, key) => {
         }
         if (power > 2500) {
           power = 2500;
+        }
+        break;
+      case "h":
+        hr += factor;
+        if (hr < 80) {
+          hr = 80;
+        }
+        if (hr > 190) {
+          hr = 190;
         }
         break;
       case "r":
@@ -181,9 +191,10 @@ let notifyPowerCSP = function () {
 let notifyPowerFTMS = function () {
   watts = power > 0 ? Math.floor(Math.random() * randomness + power) : 0;
   rpm = cadence > 0 && power > 0 ? Math.floor(Math.random() * cadRandomness + cadence) : 0;
+  const heart_rate = hr > 89 ? hr : undefined;
 
   try {
-    zwackBLE.notifyFTMS({ watts: watts, cadence: rpm });
+    zwackBLE.notifyFTMS({ watts, cadence: rpm, heart_rate });
   } catch (e) {
     console.error(e);
   }
