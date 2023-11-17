@@ -44,7 +44,9 @@ let stroke_count = 0;
 let wheel_count = 0;
 let wheel_circumference = 2096; // milimeter
 let notificationInterval = 1000;
+let hrUpdateInterval = 5000;
 let watts = power;
+let hrNoise = 0;
 
 let prevCadTime = 0;
 let prevCadInt = 0;
@@ -208,7 +210,6 @@ let notifyPowerFTMS = function () {
   rpm = cadence > 0 && power > 0 ? Math.floor(Math.random() * cadRandomness + cadence) : 0;
   
   // Adding randomness and noise to heart rate
-  const hrNoise = Math.floor(Math.random() * hrRandomness) - hrRandomness / 2;
   const heart_rate = hr > 89 ? hr + hrNoise : undefined;
 
   try {
@@ -218,6 +219,15 @@ let notifyPowerFTMS = function () {
   }
 
   setTimeout(notifyPowerFTMS, notificationInterval);
+};
+
+// Separate function for updating heart rate with a different interval
+let updateHeartRate = function () {
+  // Update heart rate noise
+  hrNoise = Math.floor(Math.random() * hrRandomness) - hrRandomness / 2; // Adjust the range as needed
+
+  // Set the interval for heart rate updates
+  setTimeout(updateHeartRate, hrUpdateInterval);
 };
 
 // Simulate Cycling Power - Broadcasting Power and Cadence
@@ -325,7 +335,7 @@ function listParams() {
   console.log(`\nBLE Sensor parameters:`);
   console.log(`\nHeart Rate:`);
   console.log(`             HR: ${hr} bpm`);
-  console.log(`  HR Randomness: ${hr} bpm`);
+  console.log(`  HR Randomness: ${hrRandomness}`);
 
   console.log(`\nCycling:`);
   console.log(`      Power: ${power} W`);
@@ -400,6 +410,7 @@ if (containsCSP && containsPWR && containsCAD && containsSPD) {
 } // Simulate Cycling Power Service - Broadcasting Power and Cadence and Speed
 if (containsFTMS) {
   notifyPowerFTMS();
+  updateHeartRate();
 } // Simulate FTMS Smart Trainer - Broadcasting Power and Cadence
 if (containsRSC) {
   notifyRSC();
