@@ -27,14 +27,15 @@ if (args.variable === undefined) {
 
 // default parameters
 let cadence = 90;
-let power = 100;
+let power = 130;
 let powerMeterSpeed = 18; // kmh
 let powerMeterSpeedUnit = 2048; // Last Event time expressed in Unit of 1/2048 second
 let runningCadence = 180;
 let runningSpeed = 10; // 6:00 minute mile
 let hr = 130;
 let randomness = 50;
-let cadRandomness = 5;
+let cadRandomness = 10;
+let hrRandomness = 10
 let sensorName = "Zwift Hub";
 
 let incr = 10;
@@ -111,6 +112,12 @@ process.stdin.on("keypress", (str, key) => {
           cadRandomness = 0;
         }
         break;
+      case "n":
+        hrRandomness += factor;
+        if (hrRandomness < 0) {
+          hrRandomness = 0;
+        }
+        break;
       case "s":
         runningSpeed += runFactor;
         if (runningSpeed < 0) {
@@ -137,14 +144,22 @@ process.stdin.on("keypress", (str, key) => {
       case "0":
         power = 0;
         cadence = 0;
+        hr = 100;
         break;
       case "1":
         power = 130;
-        cadence = 80;
+        cadence = 90;
+        hr = 130;
         break;
       case "2":
+        power = 190;
+        cadence = 90;
+        hr = 160
+        break;
+      case "3":
         power = 250;
-        cadence = 80;
+        cadence = 90;
+        hr = 170
         break;
       default:
         listKeys();
@@ -191,7 +206,10 @@ let notifyPowerCSP = function () {
 let notifyPowerFTMS = function () {
   watts = power > 0 ? Math.floor(Math.random() * randomness + power) : 0;
   rpm = cadence > 0 && power > 0 ? Math.floor(Math.random() * cadRandomness + cadence) : 0;
-  const heart_rate = hr > 89 ? hr : undefined;
+  
+  // Adding randomness and noise to heart rate
+  const hrNoise = Math.floor(Math.random() * hrRandomness) - hrRandomness / 2;
+  const heart_rate = hr > 89 ? hr + hrNoise : undefined;
 
   try {
     zwackBLE.notifyFTMS({ watts, cadence: rpm, heart_rate });
@@ -305,21 +323,24 @@ let notifyRSC = function () {
 
 function listParams() {
   console.log(`\nBLE Sensor parameters:`);
+  console.log(`\nHeart Rate:`);
+  console.log(`             HR: ${hr} bpm`);
+  console.log(`  HR Randomness: ${hr} bpm`);
+
   console.log(`\nCycling:`);
-  console.log(`    Cadence: ${cadence} RPM`);
   console.log(`      Power: ${power} W`);
+  console.log(`    Cadence: ${cadence} RPM`);
   console.log(`      Speed: ${powerMeterSpeed} km/h`);
 
   console.log("\nRunning:");
 
-  console.log(
-    `    Speed: ${runningSpeed} m/h, Pace: ${speedToPace(runningSpeed)} min/mi`
-  );
+  console.log(`      Speed: ${runningSpeed} m/h, Pace: ${speedToPace(runningSpeed)} min/mi`);
   console.log(`    Cadence: ${Math.floor(runningCadence)} steps/min`);
 
+  console.log("\nEtc:");
   console.log(`\nPower/Speed Randomness: ${randomness}`);
-  console.log(`Cadence Randomness: ${cadRandomness}`);
-  console.log(`Increment: ${incr}`);
+  console.log(`      Cadence Randomness: ${cadRandomness}`);
+  console.log(`               Increment: ${incr}`);
   console.log("\n");
 }
 
